@@ -13,8 +13,8 @@ here is a sample `docker-compose.yaml` file.
 
 ```yaml
 services:
-	boxbot:
-		build: ./boxbot
+  boxbot:
+    build: ./boxbot
     environment:
       TOKEN: "YOUR_DEV_TOKEN_HERE"
       COMMAND_PREFIX: "box::"
