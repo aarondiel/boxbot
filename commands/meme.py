@@ -46,7 +46,7 @@ def get_offensive_memes() -> list[str]:
     if offensive_memes != None:
         return offensive_memes
 
-    with open("offensive_memes.txt", "r") as f:
+    with open("/data/offensive_memes.txt", "r") as f:
         offensive_memes = f.readlines()
         return offensive_memes
 
