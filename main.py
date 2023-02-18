@@ -1,7 +1,10 @@
 import discord
 from os import environ
+from typing import Callable
 
-from commands.meme import command as meme
+from commands.meme import command as meme, \
+    handle_reaction_add as meme_reaction_add, \
+    handle_reaction_remove as meme_reaction_remove
 from commands.elotrix import command as elotrix
 from commands.play import command as play
 from commands.format import escape, replace_tabs, make_cursed
@@ -9,10 +12,37 @@ import utils
 
 client = utils.get_client()
 command_prefix = environ["COMMAND_PREFIX"]
+reaction_add_commands: list[Callable[[discord.Reaction, discord.Member | discord.User], bool]] = [
+    meme_reaction_add
+]
+
+reaction_remove_commands: list[Callable[[discord.Reaction, discord.Member | discord.User], bool]] = [
+    meme_reaction_remove
+]
+
 
 @client.event
 async def on_ready() -> None:
     print("ready")
+
+
+@client.event
+async def on_reaction_add(
+    reaction: discord.Reaction,
+    user: discord.Member | discord.User
+) -> None:
+    for fn in reaction_add_commands:
+        if fn(reaction, user):
+            return
+
+
+async def on_reaction_remove(
+    reaction: discord.Reaction,
+    user: discord.Member | discord.User
+) -> None:
+    for fn in reaction_remove_commands:
+        if fn(reaction, user):
+            return
 
 
 @client.event

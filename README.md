@@ -8,8 +8,9 @@ git clone git@github.com:aarondiel/boxbot
 
 ---
 
-to run it use `docker` in combination with `docker-compose`;
-here is a sample `docker-compose.yaml` file.
+to run it use `docker` in combination with `docker-compose`.
+
+here is a sample `docker-compose.yaml` file:
 
 ```yaml
 services:
