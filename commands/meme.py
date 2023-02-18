@@ -54,7 +54,7 @@ def get_offensive_memes() -> list[str]:
 def remove_file(filename: str) -> None:
     get_offensive_memes().append(filename)
 
-    with open("offensive_memes.txt", "a") as f:
+    with open("/data/offensive_memes.txt", "a") as f:
         f.write(f"\n{filename}")
 
 

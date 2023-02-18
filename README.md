@@ -23,9 +23,13 @@ services:
     volumes:
       - ~/Pictures/memes:/data/memes:ro
       - ~/Public/elotrix:/data/elotrix:ro
+      - ~/Public/offensive_memes.txt:/data/offensive_memes.txt:ro
 ```
 
 - `build` is the directory you just cloned
 - `TOKEN` specifies the api token of your bot
 - `COMMAND_PREFIX` is what every command has to be prefixed with (i.e. `box::meme` if `COMMAND_PREFIX="box::"`)
-- mount both a **meme** folder and a **elotrix** folder into `/data/memes` and `/data/elotrix` respecively, for the bot to use this media
+- you need to mount some files to the container, for it to function correctly:
+	- `/data/memes` a meme folder
+	- `/data/offensive_memes.txt` a blacklist of memes not to show
+	- `/data/elotrix` a folder with random screams

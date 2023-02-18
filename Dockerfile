@@ -1,8 +1,8 @@
 FROM python:3.10-bullseye
 
-WORKDIR /srv/http/BoxBot
+WORKDIR /srv/http/boxbot
 
-VOLUME [ "/data/memes", "/data/elotrix" ]
+VOLUME [ "/data/memes", "/data/elotrix", "/data/offensive_memes.txt" ]
 
 ENV TOKEN=""
 ENV COMMAND_PREFIX="box::"
@@ -16,7 +16,6 @@ COPY JavaFormatter ./JavaFormatter/
 RUN cd JavaFormatter && make all
 
 COPY commands ./commands/
-COPY main.py utils.py offensive_memes.txt ./
-
+COPY main.py utils.py ./
 
 CMD [ "python", "main.py" ]
