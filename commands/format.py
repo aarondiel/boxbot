@@ -1,3 +1,4 @@
+from os import path
 from enum import Enum
 from io import BytesIO
 from subprocess import PIPE, Popen
@@ -16,8 +17,13 @@ def strip_backticks(input: str) -> str:
 
 
 def java_formatter(input: str, file: JavaFormatterFile) -> str:
+    jar_file = path.join(
+        path.dirname(__file__),
+        f"../JavaFormatter/bin/{file.value}"
+    )
+
     output, _ = Popen(
-        ["java", "-jar", f"../JavaFormatter/bin/{file.value}"],
+        ["java", "-jar", jar_file],
         text=True,
         stdin=PIPE,
         stdout=PIPE
@@ -49,7 +55,7 @@ async def replace_tabs(channel: discord.abc.Messageable, message: str) -> None:
     )
 
 async def escape(channel: discord.abc.Messageable, message: str) -> None:
-    message = strip_backticks(message)
+    # message = strip_backticks(message)
     message = java_formatter(message, JavaFormatterFile.ReplaceUtf8)
 
     await send_message_or_file(
