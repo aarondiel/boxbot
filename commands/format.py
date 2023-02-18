@@ -55,7 +55,7 @@ async def replace_tabs(channel: discord.abc.Messageable, message: str) -> None:
     )
 
 async def escape(channel: discord.abc.Messageable, message: str) -> None:
-    # message = strip_backticks(message)
+    message = strip_backticks(message)
     message = java_formatter(message, JavaFormatterFile.ReplaceUtf8)
 
     await send_message_or_file(
