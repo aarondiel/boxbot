@@ -30,7 +30,7 @@ async def ping(interaction: discord.Interaction):
 
 @client.event
 async def on_ready() -> None:
-    print("ready")
+    await command_tree.sync()
 
 
 @client.event
