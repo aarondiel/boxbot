@@ -50,7 +50,7 @@ async def on_message(message: discord.Message) -> None:
     if message.author.bot:
         return
 
-    if message == "/ping":
+    if message.content == "/ping":
         await message.channel.send("pong")
         return
 
