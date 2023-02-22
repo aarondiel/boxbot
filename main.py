@@ -50,6 +50,10 @@ async def on_message(message: discord.Message) -> None:
     if message.author.bot:
         return
 
+    if message == "/ping":
+        await message.channel.send("pong")
+        return
+
     if not message.content.startswith(command_prefix):
         return
 
