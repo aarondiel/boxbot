@@ -12,6 +12,8 @@ import utils
 
 client = utils.get_client()
 command_prefix = environ["COMMAND_PREFIX"]
+command_tree = discord.app_commands.CommandTree(client)
+
 reaction_add_commands: list[Callable[[discord.Reaction, discord.Member | discord.User], bool]] = [
     meme_reaction_add
 ]
@@ -19,6 +21,11 @@ reaction_add_commands: list[Callable[[discord.Reaction, discord.Member | discord
 reaction_remove_commands: list[Callable[[discord.Reaction, discord.Member | discord.User], bool]] = [
     meme_reaction_remove
 ]
+
+
+@command_tree.command(name="ping", description="test if the bot is online")
+async def ping(interaction: discord.Interaction):
+    await interaction.response.send_message("pong")
 
 
 @client.event
