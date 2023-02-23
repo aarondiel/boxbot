@@ -1,10 +1,7 @@
 import discord
 from os import environ
-from typing import Callable
 
-from commands.meme import command as meme, \
-    handle_reaction_add as meme_reaction_add, \
-    handle_reaction_remove as meme_reaction_remove
+from commands.meme import command as meme
 from commands.elotrix import command as elotrix
 from commands.play import command as play
 from commands.format import escape, replace_tabs, make_cursed
@@ -14,13 +11,9 @@ client = utils.get_client()
 command_prefix = environ["COMMAND_PREFIX"]
 command_tree = discord.app_commands.CommandTree(client)
 
-reaction_add_commands: list[Callable[[discord.Reaction, discord.Member | discord.User], bool]] = [
-    meme_reaction_add
-]
-
-reaction_remove_commands: list[Callable[[discord.Reaction, discord.Member | discord.User], bool]] = [
-    meme_reaction_remove
-]
+@client.event
+async def on_ready() -> None:
+    await command_tree.sync()
 
 
 @command_tree.command(name="ping", description="test if the bot is online")
@@ -28,29 +21,7 @@ async def ping(interaction: discord.Interaction):
     await interaction.response.send_message("pong")
 
 
-@client.event
-async def on_ready() -> None:
-    await command_tree.sync()
-
-
-@client.event
-async def on_reaction_add(
-    reaction: discord.Reaction,
-    user: discord.Member | discord.User
-) -> None:
-    for fn in reaction_add_commands:
-        if fn(reaction, user):
-            return
-
-
-async def on_reaction_remove(
-    reaction: discord.Reaction,
-    user: discord.Member | discord.User
-) -> None:
-    for fn in reaction_remove_commands:
-        if fn(reaction, user):
-            return
-
+command_tree.add_command(meme)
 
 @client.event
 async def on_message(message: discord.Message) -> None:
@@ -68,9 +39,7 @@ async def on_message(message: discord.Message) -> None:
     split = content.split(" ", 1)
     command = split[0]
 
-    if command == "meme":
-        await meme(message.channel)
-    elif command == "elotrix":
+    if command == "elotrix":
         await elotrix(message.author)
     elif command == "play":
         if not len(split) > 1:
