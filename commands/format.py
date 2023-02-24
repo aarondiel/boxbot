@@ -59,11 +59,11 @@ async def read_attachment(file: discord.Attachment) -> tuple[str, str]:
 
 async def get_content(
     interaction: discord.Interaction,
-    message: str
+    message: Optional[str]
 ) -> list[tuple[str, str]]:
     content = []
 
-    if message != "":
+    if message != None and message != "":
         content.append((strip_backticks(message), "message"))
 
     if interaction.message == None:
@@ -95,7 +95,10 @@ async def send_message_or_file(
 
 @group.command(description="escape utf-8 characters")
 @discord.app_commands.describe(message="the code to format")
-async def utf8(interaction: discord.Interaction, message: str) -> None:
+async def utf8(
+    interaction: discord.Interaction,
+    message: Optional[str]
+) -> None:
     content = await get_content(interaction, message)
     if len(content) == 0:
         return
@@ -109,7 +112,10 @@ async def utf8(interaction: discord.Interaction, message: str) -> None:
 
 @group.command(description="replace tabs with spaces")
 @discord.app_commands.describe(message="the code to format")
-async def tabs(interaction: discord.Interaction, message: str) -> None:
+async def tabs(
+    interaction: discord.Interaction,
+    message: Optional[str]
+) -> None:
     content = await get_content(interaction, message)
     if len(content) == 0:
         return
@@ -123,7 +129,10 @@ async def tabs(interaction: discord.Interaction, message: str) -> None:
 
 @group.command(description="make code cursed")
 @discord.app_commands.describe(message="the code to format")
-async def cursed(interaction: discord.Interaction, message: str) -> None:
+async def cursed(
+    interaction: discord.Interaction,
+    message: Optional[str]
+) -> None:
     content = await get_content(interaction, message)
     if len(content) == 0:
         return
