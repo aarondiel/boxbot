@@ -1,19 +1,20 @@
+import discord
 from os import path
 from enum import Enum
 from io import BytesIO
+from asyncio import gather
+from typing import Optional
 from subprocess import PIPE, Popen
-import discord
+
+group = discord.app_commands.Group(
+    name="format",
+    description="code formatting tools"
+)
 
 class JavaFormatterFile(Enum):
     ReplaceUtf8 = "ReplaceUtf8.jar"
     ReplaceTabs = "ReplaceTabs.jar"
     MakeCursed = "MakeCursed.jar"
-
-def strip_backticks(input: str) -> str:
-    if not input.startswith("```"):
-        return input
-
-    return "\n".join(input.splitlines()[1:-1])
 
 
 def java_formatter(input: str, file: JavaFormatterFile) -> str:
@@ -32,44 +33,104 @@ def java_formatter(input: str, file: JavaFormatterFile) -> str:
     return output.removesuffix("\n")
 
 
+def format_utf8(input: tuple[str, str]) -> tuple[str, str]:
+    return (java_formatter(input[0], JavaFormatterFile.ReplaceUtf8), input[1])
+
+
+def format_tabs(input: tuple[str, str]) -> tuple[str, str]:
+    return (java_formatter(input[0], JavaFormatterFile.ReplaceTabs), input[1])
+
+
+def format_cursed(input: tuple[str, str]) -> tuple[str, str]:
+    return (java_formatter(input[0], JavaFormatterFile.MakeCursed), input[1])
+
+
+def strip_backticks(input: str) -> str:
+    if not input.startswith("```"):
+        return input
+
+    return "\n".join(input.splitlines()[1:-1])
+
+
+async def read_attachment(file: discord.Attachment) -> tuple[str, str]:
+    file_content = await file.read()
+    return (file_content.decode(), file.filename)
+
+
+async def get_content(
+    interaction: discord.Interaction,
+    message: str
+) -> list[tuple[str, str]]:
+    content = []
+
+    if message != "":
+        content.append((strip_backticks(message), "message"))
+
+    if interaction.message == None:
+        return content
+        
+    content.extend(await gather(*(
+        read_attachment(file)
+        for file in interaction.message.attachments
+    ), return_exceptions=False))
+
+    return content
+
+
 async def send_message_or_file(
-    channel: discord.abc.Messageable,
+    interaction: discord.Interaction,
     message: str,
+    filename: Optional[str] = None
 ) -> None:
-    async with channel.typing():
-        if len(message) <= 2000:
-            await channel.send(f"```java\n{message}\n```")
-            return
+    if len(message) <= 2000:
+        await interaction.response.send_message(
+            content=f"```\n{message}\n```"
+        )
 
-        file = discord.File(BytesIO(message.encode()), filename="cursed.java")
-        await channel.send(file=file)
+        return
+
+    file = discord.File(BytesIO(message.encode()), filename=filename)
+    await interaction.response.send_message(file=file)
 
 
-async def replace_tabs(channel: discord.abc.Messageable, message: str) -> None:
-    message = strip_backticks(message)
-    message = java_formatter(message, JavaFormatterFile.ReplaceTabs)
+@group.command(description="escape utf-8 characters")
+@discord.app_commands.describe(message="the code to format")
+async def utf8(interaction: discord.Interaction, message: str) -> None:
+    content = await get_content(interaction, message)
+    if len(content) == 0:
+        return
 
-    await send_message_or_file(
-        channel,
-        message
-    )
+    content = map(format_utf8, content)
+    await gather(*(
+        send_message_or_file(interaction, file[0], file[1])
+        for file in content
+    ))
 
-async def escape(channel: discord.abc.Messageable, message: str) -> None:
-    message = strip_backticks(message)
-    message = java_formatter(message, JavaFormatterFile.ReplaceUtf8)
 
-    await send_message_or_file(
-        channel,
-        message
-    )
+@group.command(description="replace tabs with spaces")
+@discord.app_commands.describe(message="the code to format")
+async def tabs(interaction: discord.Interaction, message: str) -> None:
+    content = await get_content(interaction, message)
+    if len(content) == 0:
+        return
 
-async def make_cursed(channel: discord.abc.Messageable, message: str) -> None:
-    message = strip_backticks(message)
-    message = java_formatter(message, JavaFormatterFile.ReplaceTabs)
-    message = java_formatter(message, JavaFormatterFile.ReplaceUtf8)
-    message = java_formatter(message, JavaFormatterFile.MakeCursed)
+    content = map(format_tabs, content)
+    await gather(*(
+        send_message_or_file(interaction, file[0], file[1])
+        for file in content
+    ))
 
-    await send_message_or_file(
-        channel,
-        message
-    )
+
+@group.command(description="make code cursed")
+@discord.app_commands.describe(message="the code to format")
+async def cursed(interaction: discord.Interaction, message: str) -> None:
+    content = await get_content(interaction, message)
+    if len(content) == 0:
+        return
+
+    content = map(format_tabs, content)
+    content = map(format_cursed, content)
+    await gather(*(
+        send_message_or_file(interaction, file[0], file[1])
+        for file in content
+    ))

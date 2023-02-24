@@ -108,4 +108,4 @@ async def command(interaction: discord.Interaction) -> None:
 
     if 3 * offensive >= 2 * (ok + offensive):
         remove_file(file)
-        await interaction.response.edit_message(content="im sorry ")
+        await interaction.edit_original_response(content="im sorry ")

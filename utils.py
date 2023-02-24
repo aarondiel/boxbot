@@ -10,7 +10,10 @@ def get_client() -> discord.Client:
     intents.message_content = True
     intents.voice_states = True
 
-    return discord.Client(intents=intents)
+    return discord.Client(
+        intents=intents,
+        activity=discord.Game(name="Doki Doki Literature Club")
+    )
 
 
 def get_client_id(client: discord.Client) -> int:
