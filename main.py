@@ -9,7 +9,6 @@ from commands.play import command as play
 from commands.elotrix import command as elotrix
 
 client = utils.get_client()
-command_prefix = environ["COMMAND_PREFIX"]
 command_tree = discord.app_commands.CommandTree(client)
 
 @client.event

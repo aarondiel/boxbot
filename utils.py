@@ -16,16 +16,9 @@ def get_client() -> discord.Client:
     )
 
 
-def get_client_id(client: discord.Client) -> int:
-    if client.user == None:
-        raise Exception("client is not connected")
-
-    return client.user.id
-
-
 async def get_voice_connection(
-        channel: discord.channel.VocalGuildChannel
-    ) -> discord.VoiceClient:
+    channel: discord.channel.VocalGuildChannel
+) -> discord.VoiceClient:
     global connections
 
     if channel.guild.id in connections:
