@@ -66,7 +66,7 @@ def remove_file(filename: str) -> None:
         f.write(f"{filename}\n")
 
 
-@discord.app_commands.command(name="meme", description="send a random meme")
+@discord.app_commands.command(description="send a random meme")
 async def command(interaction: discord.Interaction) -> None:
     file = utils.random_file(
         "/data/memes",

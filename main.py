@@ -24,6 +24,7 @@ async def ping(interaction: discord.Interaction):
 
 command_tree.add_command(meme)
 command_tree.add_command(format)
+command_tree.add_command(play)
 
 @client.event
 async def on_message(message: discord.Message) -> None:
@@ -39,12 +40,6 @@ async def on_message(message: discord.Message) -> None:
 
     if command == "elotrix":
         await elotrix(message.author)
-    elif command == "play":
-        if not len(split) > 1:
-            await message.channel.send("invlid number of arguments")
-            return
-
-        await play(message.author, split[1])
 
 
 if __name__ == "__main__":

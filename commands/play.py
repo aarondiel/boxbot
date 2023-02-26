@@ -34,25 +34,22 @@ def get_urls(url: str) -> list[str]:
         if entry != None
     ]
 
-
-async def command(author: discord.User | discord.Member, url: str):
-    if isinstance(author, discord.User):
+@discord.app_commands.command(description="play the audio from a given url")
+@discord.app_commands.describe(url="url to source")
+async def command(interaction: discord.Interaction, url: str) -> None:
+    if isinstance(interaction.user, discord.User):
+        await interaction.response.send_message(content="cannot play from this context")
         return
 
-    voice = author.voice
-    if voice == None:
+    voice = interaction.user.voice
+    if voice == None or voice.channel == None:
+        await interaction.response.send_message(content="you are not connected to any voice channel")
         return
 
-    channel = voice.channel
-    if channel == None:
-        return
-
-    voice_connection = await utils.get_voice_connection(channel)
-
-    urls = get_urls(url)
-    for url in urls:
+    voice_connection = await utils.get_voice_connection(voice.channel)
+    
+    for url in get_urls(url):
         source = discord.FFmpegOpusAudio(url, options="-vn")
-
         await utils.play(voice_connection, source)
 
     await voice_connection.disconnect()
