@@ -1,19 +1,18 @@
 import discord
 import utils
 
-async def command(author: discord.User | discord.Member):
-    if isinstance(author, discord.User):
+@discord.app_commands.command(description="scream at me")
+async def command(interaction: discord.Interaction):
+    if isinstance(interaction.user, discord.User):
+        await interaction.response.send_message(content="cannot play from this context")
         return
 
-    voice = author.voice
-    if voice == None:
+    voice = interaction.user.voice
+    if voice == None or voice.channel == None:
+        await interaction.response.send_message(content="you are not connect to any voice channel")
         return
 
-    channel = voice.channel
-    if channel == None:
-        return
-
-    voice_connection = await utils.get_voice_connection(channel)
+    voice_connection = await utils.get_voice_connection(voice.channel)
 
     file_path = utils.random_file("/data/elotrix")
     source = discord.FFmpegOpusAudio(file_path)

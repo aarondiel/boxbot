@@ -25,21 +25,7 @@ async def ping(interaction: discord.Interaction):
 command_tree.add_command(meme)
 command_tree.add_command(format)
 command_tree.add_command(play)
-
-@client.event
-async def on_message(message: discord.Message) -> None:
-    if message.author.bot:
-        return
-
-    if not message.content.startswith(command_prefix):
-        return
-
-    content = message.content[len(command_prefix):]
-    split = content.split(" ", 1)
-    command = split[0]
-
-    if command == "elotrix":
-        await elotrix(message.author)
+command_tree.add_command(elotrix)
 
 
 if __name__ == "__main__":
