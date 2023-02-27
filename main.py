@@ -2,11 +2,11 @@ import discord
 from os import environ
 
 import utils
-from commands.ping import command as ping
-from commands.meme import command as meme
-from commands.format import group as format
-from commands.play import command as play
-from commands.elotrix import command as elotrix
+from commands.ping import ping
+from commands.meme import meme
+from commands.format import format
+from commands.play import play
+from commands.elotrix import elotrix
 
 client = utils.get_client()
 command_tree = discord.app_commands.CommandTree(client)

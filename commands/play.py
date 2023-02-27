@@ -36,7 +36,7 @@ def get_urls(url: str) -> list[str]:
 
 @discord.app_commands.command(description="play the audio from a given url")
 @discord.app_commands.describe(url="url to source")
-async def command(interaction: discord.Interaction, url: str) -> None:
+async def play(interaction: discord.Interaction, url: str) -> None:
     if isinstance(interaction.user, discord.User):
         await interaction.response.send_message(content="cannot play from this context")
         return

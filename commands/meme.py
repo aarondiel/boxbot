@@ -67,7 +67,7 @@ def remove_file(filename: str) -> None:
 
 
 @discord.app_commands.command(description="send a random meme")
-async def command(interaction: discord.Interaction) -> None:
+async def meme(interaction: discord.Interaction) -> None:
     file = utils.random_file(
         "/data/memes",
         banned=get_offensive_memes()

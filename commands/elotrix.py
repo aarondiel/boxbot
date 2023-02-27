@@ -2,7 +2,7 @@ import discord
 import utils
 
 @discord.app_commands.command(description="scream at me")
-async def command(interaction: discord.Interaction):
+async def elotrix(interaction: discord.Interaction):
     if isinstance(interaction.user, discord.User):
         await interaction.response.send_message(content="cannot play from this context")
         return

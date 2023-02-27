@@ -6,7 +6,7 @@ from asyncio import gather
 from typing import Optional
 from subprocess import PIPE, Popen
 
-group = discord.app_commands.Group(
+format = discord.app_commands.Group(
     name="format",
     description="code formatting tools"
 )
@@ -93,7 +93,7 @@ async def send_message_or_file(
     await interaction.response.send_message(file=file)
 
 
-@group.command(description="escape utf-8 characters")
+@format.command(description="escape utf-8 characters")
 @discord.app_commands.describe(message="the code to format")
 async def utf8(
     interaction: discord.Interaction,
@@ -110,7 +110,7 @@ async def utf8(
     ))
 
 
-@group.command(description="replace tabs with spaces")
+@format.command(description="replace tabs with spaces")
 @discord.app_commands.describe(message="the code to format")
 async def tabs(
     interaction: discord.Interaction,
@@ -127,7 +127,7 @@ async def tabs(
     ))
 
 
-@group.command(description="make code cursed")
+@format.command(description="make code cursed")
 @discord.app_commands.describe(message="the code to format")
 async def cursed(
     interaction: discord.Interaction,
