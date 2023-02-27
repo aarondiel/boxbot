@@ -103,9 +103,12 @@ async def meme(interaction: discord.Interaction) -> None:
 
     await sleep(30)
 
+    await interaction.edit_original_response(view=None)
+
     ok = len(view.ok_reactions)
     offensive = len(view.offensive_reactions)
 
     if 3 * offensive >= 2 * (ok + offensive):
         remove_file(file)
-        await interaction.edit_original_response(content="im sorry ")
+        await interaction.delete_original_response()
+        await interaction.response.send_message(content="i'm sorry :point_right: :point_left:")
