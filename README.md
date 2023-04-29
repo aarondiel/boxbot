@@ -15,7 +15,7 @@ here is a sample `docker-compose.yaml` file:
 ```yaml
 services:
   boxbot:
-    build: ./boxbot
+    build: .
     environment:
       TOKEN: "YOUR_DEV_TOKEN_HERE"
  
@@ -25,7 +25,6 @@ services:
       - ~/Public/offensive_memes.txt:/data/offensive_memes.txt
 ```
 
-- `build` is the directory you just cloned
 - `TOKEN` specifies the api token of your bot
 - you need to mount some files to the container, for it to function correctly:
 	- `/data/memes` a meme folder
